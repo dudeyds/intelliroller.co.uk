@@ -1,0 +1,557 @@
+	<!DOCTYPE html> <html lang="en"> <head>
+	  <title>IntelliRoller controller</title>
+	  <meta charset="utf-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <link rel="stylesheet" 
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	  <script 
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	  <script 
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style>
+		.neutralmessage {
+		width: 100%;
+		padding: 50px 0;
+		text-align: center;
+		background-color: lightblue;
+		margin-top: 20px;
+		color: black;
+		}
+	</style> <style>
+		.successmessage {
+		width: 100%;
+		padding: 50px 0;
+		text-align: center;
+		background-color: lime;
+		margin-top: 20px;
+		color: black;
+		}
+	</style> <style>
+		.failuremessage {
+		width: 100%;
+		padding: 50px 0;
+		text-align: center;
+		background-color: red;
+		margin-top: 20px;
+		color: white;
+		}
+	</style> <style>
+		.button {
+		background-color: white; /* Green */
+		border: 5px solid lime; /* Green */
+		color: black;
+		padding: 15px 32px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 16px;
+		}
+		.button:hover {
+			background-color: lime;
+		}
+	</style> 
+	</head> 
+	<body> 
+		<div class="jumbotron text-center">
+		  <h1>IntelliRoller Assesor controller</h1>
+		  <p>This web page allows the control of an IntelliRoller device</p> 
+		</div> 
+		<div class="container">
+			<div class="row mb-2">
+				<div id="Message">
+						This is the output box
+				</div>
+			</div> 
+		</div> 
+		<div id="RetryConnection" >
+				<div class="row">
+					<div class="col text-center">
+						<button class="button" onclick="refresh()">retry connection</button>
+					</div>
+				</div> 
+		</div> 
+		<div id="PairScreen">
+			<div class="container">
+				<div class="row">
+					<div class="col-6 mx-auto">
+						  <div class="form-group">
+							<label for="KeyPair">Pairing code</label>
+							<input type="number" class="form-control" 
+								id="KeyPair" aria-describedby="emailHelp" placeholder="Enter pairing 
+								code">
+							<small id="emailHelp" class="form-text 
+		text-muted">you should ask the person wearing the device for the code 
+		they can see on the screen.</small>
+						  </div>
+						  <button class="button" 
+		onclick="SubmitPairingCode()">Submit</button>
+					</div>
+				</div>
+			</div> 
+		</div> 
+	<div id="MainController" style="display:none">
+			<div class="container">
+				<div class="row">
+					<div id ="PlayerInfo" style="display:none  class="col-sm-4">
+						<h3>Player information</h3>
+						<h4>Search</h4>
+						<div class ="form-group">
+						<label for="SearchEmail">Email</label>
+							<input type="text" class="form-control" 
+								id="SearchEmail" aria-describedby="emailHelp" placeholder="Enter Email to search for here">
+							<small id="emailHelp" class="form-text 
+								text-muted">please input your email here if you already have an account</small>
+							<button class="button" onclick="Search()">Search</button>
+						</div>
+						<h4>Create/edit</h4>
+						<div class="form-group">
+							<label for="FirstName">First name</label>
+							<input type="text" class="form-control" 
+								id="FirstName" aria-describedby="emailHelp" placeholder="Enter first name here">
+							<label for="LastName">Last name</label>
+							<input type="text" class="form-control" 
+								id="LastName" aria-describedby="emailHelp" placeholder="Enter last name here">
+							<label for="DateOfBirth">date of birth</label>
+							<input type="date" class="form-control" 
+								id="DateOfBirth" aria-describedby="emailHelp" placeholder="Enter date of birth here">
+								<label for="Email">Email</label>
+							<input type="email" class="form-control" 
+								id="Email" aria-describedby="emailHelp" placeholder="Enter email here">
+						</div>
+						
+							<button class="button" onclick="Player('Create')">Create</button>
+							<button class="button" onclick="Player('Edit')">Edit</button>
+							<button class="button" onclick="Player('Delete')">Delete</button>
+						
+					</div>
+					
+					<div  id = "DisabilityInfo" style="display:none  class="col-sm-4">
+						<h3>Disability information</h3>
+						<p> Search for a disability here. </p>
+						<div id= "NewDisabilityInput">
+							<div id = "DisabilSelector">
+								<select id="DisabilList">
+								  <option value="volvo">Volvo</option>
+								  <option value="saab">Saab</option>
+								  <option value="mercedes">Mercedes</option>
+								  <option value="audi">Audi</option>
+								</select>
+								<button class="button" onclick="setUserDisability()">Add user disability</button>
+								<button class="button" onclick="removeMainDisability()">Delete disability from database</button>
+							</div>
+						<p>enter a new disability into the box below if it's not in the database. </p> 
+						<label for="newDisability">New disability:</label><br>
+						<p>type a new Disability to add to the database</p>
+						<input type="text" id="newDisability" name="newDisability"><br>
+						<button class="button" onclick="AddDisability()">Add new disability to database</button>
+						</div>
+						<h4> Disabilities currently selected for the user </h4>
+						<div id ="UserDisabilityInfo">
+						
+						</div>
+					</div>
+					<div  id = "AreaInfo" style="display:none  class="col-sm-4">
+						<h3>Areas affected information</h3>
+						<p> Search for a area here. </p>
+						<div id= "NewAreaInput">
+							<div id = "AreaSelector">
+								<select id="AreaList">
+								  <option value="volvo">Volvo</option>
+								  <option value="saab">Saab</option>
+								  <option value="mercedes">Mercedes</option>
+								  <option value="audi">Audi</option>
+								</select>
+								<button class="button" onclick="setUserArea()">Add user area affected</button>
+								<button class="button" onclick="removeMainArea()">Delete area from database</button>
+							</div>
+						<p>enter a new area affected into the box below if it's not in the database. </p> 
+						<label for="newArea">New Area:</label><br>
+						<p>type a new area to add to the database</p>
+						<input type="text" id="newArea" name="newArea"><br>
+						<button class="button" onclick="AddArea()">Add new disability to database</button>
+						</div>
+						<h4> Areas currently selected for the user </h4>
+						<div id ="UserAreaInfo">
+						
+						</div>
+					</div>
+					<div id = "Roller" style="display:none  class="col-sm-4">
+						<h3>Roller controls</h3>
+						<h4>Incline controls</h4>
+						<label for="ActuatorTime">Time to move actuators</label>
+							<input type="text" class="form-control" 
+								id="ActuatorTime" aria-describedby="emailHelp" placeholder="Enter time here (ms)">
+							<div class="row">
+								<div class="col-sm-6">
+									<button class="button" onclick="Incline('RB')">Raise both</button>
+								</div>
+								
+								<div class="col-sm-6">
+									<button class="button" onclick="Incline('LB')">Lower both</button>
+								</div>
+							
+							</div>
+							<div class="row">
+								<div class="col-sm-6">
+									<button class="button" onclick="Incline('RL')">Raise left</button>
+								</div>
+								
+								<div class="col-sm-6">
+									<button class="button" onclick="Incline('RR')">Raise right</button>
+								</div>
+							
+							</div>
+							
+							<div class="row">
+								<div class="col-sm-6">
+									<button class="button" onclick="Incline('LL')">Lower left</button>
+								</div>
+								
+								<div class="col-sm-6">
+									<button class="button" onclick="Incline('LR')">Lower right</button>
+								</div>
+								</div>
+							<div class="row">
+								<div class="col-sm-6">
+									<button class="button" onclick="Incline('R')">Reset</button>
+								</div>
+							</div>
+							<h4>Resistance controls</h4>
+							<div class="slidecontainer">
+							<label for="myRange">Left wheel</label>
+								<input type="range" min="0" max="100" value="0" class="slider" id="myRange">
+							<label for="myRange1">Right wheel</label>
+								<input type="range" min="0" max="100" value="0" class="slider" id="myRange1">
+							</div>
+							<div class="col-sm-12 text-center">
+								<button class="button" onclick="Resistance()">Set resistance</button>
+							</div>
+					</div>
+					<div  id = "Test" style="display:none  class="col-sm-4">
+					  <h3>Test control</h3>
+					  <p>Select a test to run on the user</p>
+						<div class="row">
+								<div class="col-sm-6">
+									<button class="button" onclick="test('SpeedTest')">Speed test</button>
+								</div>
+						</div>
+						<div class="row">
+								<div class="col-sm-6">
+									<button class="button" onclick="test('CoordinationTest')">Co-ordination test</button>
+								</div>
+						</div>
+						<div class="row">
+								<div class="col-sm-6">
+									<button class="button" onclick="test('AgilityTest')">Agility test</button>
+								</div>
+						</div>
+					</div>
+			</div> 
+		</div> 
+	</div>
+		<script> 
+		ws = new 
+		WebSocket(`wss://intelliroller.co.uk/assesor`); 
+		ws.onerror = () => {
+			failuremessage('cannot connect to server');
+			togglecolumn("RetryConnection");
+		}
+		ws.onopen = () => {
+			successmessage('connection established, input pairing code below');
+			togglecolumn("RetryConnection");
+		}
+		ws.onclose = () => {
+			failuremessage('WebSocket connection closed');
+			togglecolumn("RetryConnection");
+		}
+		ws.onmessage = function(event) {
+			console.debug("WebSocket message received:", event);
+			//alert("got message: " + event.data);
+			if(event.data == "Matched") {
+				successmessage("Paired Successfully");
+				togglecolumn("PairScreen");
+				togglecolumn("MainController");
+				togglecolumn("Roller");
+				togglecolumn("AreaInfo");
+				togglecolumn("DisabilityInfo");
+				togglecolumn("Test");
+				ws.send("messagePair Matched");
+			}
+			if(event.data == "No Matching key") {
+				failuremessage("Key invalid, please try again");
+			}
+			if(event.data == "User not found") {
+				failuremessage("User not found");
+			}
+			if(event.data.includes("Incorrect date value"))
+			{
+				failuremessage("Date not input correctly");
+			}
+			if(event.data == "User deleted") {
+				togglecolumn("Roller");
+				togglecolumn("AreaInfo");
+				togglecolumn("DisabilityInfo");
+				togglecolumn("Test");
+			}
+			if(event.data == "DisabilityListReset") {
+				$('#DisabilList').empty();
+			}
+			if(event.data == "UserDisabilityListReset") {
+				$('#UserAreaInfo').empty();
+			}
+			if(event.data == "AreaListReset") {
+				$('#AreaList').empty();
+			}
+			if(event.data == "UserAreaListReset") {
+				$('#UserAreaInfo').empty();
+			}
+			if(event.data.includes("DisabilityList:"))
+			{
+				var disability = event.data.replace("DisabilityList:","");
+				$('#DisabilList').append("<option value='" + disability + "'>"+ disability + " </option>");
+			
+			}
+			if(event.data.includes("AreaList:"))
+			{
+				var disability = event.data.replace("AreaList:","");
+				$('#AreaList').append("<option value='" + disability + "'>"+ disability + " </option>");
+			
+			}
+			
+			if(event.data.includes("Disability:"))
+			{
+				var DisabilityName = event.data.replace("Disability:","");
+				console.log("Aquired " + DisabilityName);
+				var p1 = "<div id= 'DISABILITY:"+ DisabilityName + "'<h4>" + DisabilityName + "</h> <button class='button' onclick=";
+				var p2 = "'deleteDisability(";
+				var p3 = "'" + DisabilityName + "'";
+				var p4 = ")'>Delete</button> </div>";
+				//$("#DisabilityInfo").append(p1+p2+p3+p4);
+				$("#UserDisabilityInfo").append("<div id= \'DISABILITY"+ DisabilityName + "\'<h4>" + DisabilityName + "</h> <button class=\'button\' onclick=\"deleteDisability(\'" + DisabilityName + "\')\">Delete</button> </div>");
+			}
+			if(event.data.includes("Area:"))
+			{
+				var DisabilityName = event.data.replace("Area:","");
+				console.log("Aquired " + DisabilityName);
+				var p1 = "<div id= 'Area:"+ DisabilityName + "'<h4>" + DisabilityName + "</h> <button class='button' onclick=";
+				var p2 = "'deleteDisability(";
+				var p3 = "'" + DisabilityName + "'";
+				var p4 = ")'>Delete</button> </div>";
+				//$("#DisabilityInfo").append(p1+p2+p3+p4);
+				$("#UserAreaInfo").append("<div id= \'Area"+ DisabilityName + "\'<h4>" + DisabilityName + "</h> <button class=\'button\' onclick=\"deleteArea(\'" + DisabilityName + "\')\">Delete</button> </div>");
+			}
+			
+			if(event.data.includes("PlayerInfo: "))
+			{
+				togglecolumn("Roller");
+				togglecolumn("AreaInfo");
+				togglecolumn("DisabilityInfo");
+				togglecolumn("Test");
+				successmessage("Player found/created successfully");
+				var message = event.data;
+				message = message.replace("PlayerInfo: ", "");
+				var index = message.indexOf("*");
+				var FirstName = message.substring(0,index);
+				message = message.substring(index+1);
+				var index = message.indexOf("*");
+				var LastName = message.substring(0,index);
+				message = message.substring(index+1);
+				var index = message.indexOf("*");
+				var DateOfBirth = message.substring(0,index);
+				message = message.substring(index+1);
+				var index = message.indexOf("*");
+				var Email = message.substring(0,index);
+				var Date1 = new Date(DateOfBirth);
+				var Day = Date1.getDate().toString();
+				if(Day.length ==1) { Day = "0" + Day; }
+				var Month = Date1.getMonth().toString();
+				if(Month.length ==1) { Month = "0" + Month; }
+				document.getElementById("FirstName").value = FirstName;
+				document.getElementById("LastName").value = LastName;
+				document.getElementById("DateOfBirth").value = Date1.getFullYear() + "-" + Month +"-"+ Day;
+				document.getElementById("Email").value = document.getElementById("SearchEmail").value;
+				ws.send("GetUserDisability");
+				ws.send("GetDisabilities");
+				ws.send("GetAreas");
+				ws.send("GetAreaAffected");
+			}
+		};
+		function deleteDisability(name)
+		{
+		console.log("The disability " +  name + " Will be deleted!");
+			ws.send("RemoveUserDisability " + name);
+			ws.send("GetUserDisability");
+		}
+		function deleteArea(name)
+		{
+		console.log("The area " +  name + " Will be deleted!");
+			ws.send("RemoveUserAreaAffected " + name);
+			ws.send("GetAreaAffected");
+		}
+		function AddDisability()
+		{
+			var x = document.getElementById("newDisability");
+			x = x.value;
+			ws.send("AddDisability " + x);
+			ws.send("GetDisabilities");
+		}
+		function AddArea()
+		{
+			var x = document.getElementById("newArea");
+			x = x.value;
+			ws.send("AddAreaAffected " + x);
+			ws.send("GetAreas");
+		}
+		function removeMainDisability()
+		{
+			var x = document.getElementById("DisabilList");
+			var x = x.value;
+			ws.send("RemoveDisability " + x);
+			ws.send("GetDisabilities");
+		}
+		function removeMainArea()
+		{
+			var x = document.getElementById("AreaList");
+			var x = x.value;
+			ws.send("RemoveAreaAffected " + x);
+			ws.send("GetAreas");
+		}
+		function togglecolumn(column) {
+			var x = document.getElementById(column);
+			if (x.style.display === "none") {
+				x.style.display = "block";
+			} else {
+				x.style.display = "none";
+			}
+		} 
+		function setUserDisability()
+		{
+			var x = document.getElementById("DisabilList");
+			var x = x.value;
+			ws.send("AddUserDisability " + x);
+			ws.send("GetUserDisability");
+		}
+		function setUserArea()
+		{
+			var x = document.getElementById("AreaList");
+			var x = x.value;
+			ws.send("AddUserAreaAffected " + x);
+			ws.send("GetAreaAffected");
+		}
+		function refresh(){
+			location.reload();
+		}
+		function neutralmessage(message) {
+			var x = document.getElementById("Message");
+			x.classList.remove("neutralmessage");
+			x.classList.remove("failuremessage");
+			x.classList.remove("successmessage");
+			x.classList.toggle("neutralmessage");
+			x.innerHTML = message;
+		} 
+		function successmessage(message) {
+			var x = document.getElementById("Message");
+			x.classList.remove("neutralmessage");
+			x.classList.remove("failuremessage");
+			x.classList.remove("successmessage");
+			x.classList.toggle("successmessage");
+			x.innerHTML = message;
+		} 
+		function failuremessage(message) {
+			var x = document.getElementById("Message");
+			x.classList.remove("neutralmessage");
+			x.classList.remove("failuremessage");
+			x.classList.remove("successmessage");
+			x.classList.toggle("failuremessage");
+			x.innerHTML = message;
+		} 
+		function Incline(message) {
+		var Instruction = "";
+			switch(message) {
+				case "RB":
+				Instruction = "RB";
+				break;
+				
+				case "LB":
+				Instruction = "LB";
+				break;
+				
+				case "RL":
+				Instruction = "RL";
+				break;
+				
+				case "RR":
+				Instruction = "RR";
+				break;
+				
+				case "LL":
+				Instruction = "LL";
+				break;
+				
+				case "LR":
+				Instruction = "LR";
+				break;
+				
+				case "R":
+				Instruction = "R";
+				break;
+			}
+			Instruction += "*" + document.getElementById("ActuatorTime").value;
+			ws.send("messagePair " + Instruction);
+		}
+		function test(message) {
+			ws.send("messagePair " + message);
+		}
+		function Resistance() {
+			var Left = document.getElementById("myRange").value;
+			var Right = document.getElementById("myRange1").value;
+			ws.send("messagePair " + Left + "*" + Right);
+		}
+		function SubmitPairingCode() {
+		var x = document.getElementById("KeyPair");
+		var keycode = x.value;
+		var message = "pair " + keycode;
+		ws.send(message);
+		}
+		function Player(command) {
+		
+			var FirstName = document.getElementById("FirstName").value;
+			var LastName = document.getElementById("LastName").value;
+			var DateOfBirth = new Date(document.getElementById("DateOfBirth").value);
+			var year = String(DateOfBirth.getFullYear());
+			var Month = String(DateOfBirth.getMonth()+1);
+			if (Month.length == 1) {
+				Month = "0" + Month
+			}
+			var Day = String(DateOfBirth.getDate());
+			if (Day.length == 1) {
+				Day = "0" + Day;
+			}
+			var DateOfBirthFormatted = year + "/" + Month + "/" + Day;
+			var Email = document.getElementById("Email").value;
+			if(command == "Create")
+			{
+				ws.send("AddUser "+ FirstName + "*" + LastName + "*" + DateOfBirthFormatted + "*" + Email + "*");
+				ws.send("SetUser " + Email);
+				
+			}
+			else if (command == "Edit")
+			{
+				ws.send("EditUser "+ FirstName + "*" + LastName + "*" + DateOfBirthFormatted + "*" + Email + "*");
+			}
+			else if (command == "Delete")
+			{
+				ws.send("DeleteUser");
+				document.getElementById("FirstName").value = null;
+				document.getElementById("LastName").value= null;
+				document.getElementById("DateOfBirth").value= null;
+				document.getElementById("Email").value= null;
+			}
+		}
+		function Search(){
+		var Email = document.getElementById("SearchEmail").value;
+		ws.send("SetUser " + Email);
+		}
+	</script> 
+	</body>
+	</html>
