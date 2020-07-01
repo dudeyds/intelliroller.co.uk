@@ -1,3 +1,14 @@
+# IntelliRoller homepage / control page
+
+This is the repository for the Inteliroller website, the home page is created using a bootstrap theme, the information about this theme is found below.
+
+The GO page is a web socket enabled controller that allows one to control my wheelchair treadmill pltaform from any internet enabled device with a modern web browser. Make sure your browser supports websockets.
+
+
+
+
+
+
 # [Start Bootstrap - Creative](https://startbootstrap.com/template-overviews/creative/)
 
 [Creative](http://startbootstrap.com/template-overviews/creative/) is a one page creative theme for [Bootstrap](http://getbootstrap.com/) created by [Start Bootstrap](http://startbootstrap.com/).
